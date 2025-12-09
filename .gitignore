@@ -1,0 +1,12 @@
+.stack-work/
+*~
+.DS_Store
+dist/
+dist-newstyle/
+*.hi
+*.o
+.vscode/
+*.log
+*.tmp
+*.lock
+*.cabal
