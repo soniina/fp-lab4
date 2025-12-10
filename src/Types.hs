@@ -30,7 +30,8 @@ data Player = Player
   deriving (Show)
 
 data GamePhase
-  = WaitForInput
+  = CheckPenalty
+  | WaitForInput
   | ExecuteCard
   | ApplyEffect
   | CheckUnoShout

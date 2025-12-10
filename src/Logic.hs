@@ -73,3 +73,33 @@ drawCard _ = do
     (top : rest) -> do
       updatePlayer (currentPlayerIndex st) (\p -> p {hand = top : hand p})
       modify $ \s -> s {deck = rest}
+
+acceptPenalty :: PlayerAction -> Game ()
+acceptPenalty _ = do
+  st <- get
+  let penalty = pendingPenalty st
+  replicateM_ penalty (drawCard DrawCard)
+  modify $ \s -> s {pendingPenalty = 0}
+
+switchTurn :: PlayerAction -> Game ()
+switchTurn _ = modify $ \st ->
+  let total = length (players st)
+      pId = currentPlayerIndex st
+      next = (pId + direction st) `mod` total
+   in st {currentPlayerIndex = next}
+
+applySpecialCardEffect :: PlayerAction -> Game ()
+applySpecialCardEffect _ = do
+  st <- get
+  let top = getTopCard st
+
+  case value top of
+    Reverse ->
+      modify $ \s -> s {direction = direction s * (-1)}
+    Skip ->
+      switchTurn DrawCard
+    DrawTwo -> do
+      modify $ \s -> s {pendingPenalty = pendingPenalty s + 2}
+    WildDrawFour ->
+      modify $ \s -> s {pendingPenalty = pendingPenalty s + 4}
+    _ -> return ()
