@@ -1,5 +1,8 @@
 module Types where
 
+import Control.Monad.State (State)
+import System.Random (StdGen)
+
 data Color = Red | Yellow | Green | Blue
   deriving (Show, Eq)
 
@@ -28,7 +31,6 @@ data Player = Player
 
 data GamePhase
   = WaitForInput
-  | Validation
   | ExecuteCard
   | ApplyEffect
   | CheckUnoShout
@@ -53,6 +55,9 @@ data GameState
     direction :: Int, -- 1 (по часовой) или -1 (против)
     currentPhase :: GamePhase,
     pendingPenalty :: Int,
-    gameLog :: [String]
+    gameLog :: [String],
+    rndGen :: StdGen
   }
   deriving (Show)
+
+type Game a = State GameState a

@@ -1,11 +1,12 @@
 module DSL where
 
+import Control.Monad.State (execState)
 import Data.List (find)
 import Types
 
 type Condition = GameState -> PlayerAction -> Bool
 
-type Effect = GameState -> PlayerAction -> GameState
+type Effect = PlayerAction -> Game ()
 
 data Transition = Transition
   { fromState :: GamePhase,
@@ -21,7 +22,7 @@ step :: GameMachine -> GameState -> PlayerAction -> Either String GameState
 step machine state action =
   case find isMatchingRule machine of
     Just rule ->
-      let stateAfterEffect = effect rule state action
+      let stateAfterEffect = execState (effect rule action) state
           finalState = stateAfterEffect {currentPhase = toState rule}
        in Right finalState
     Nothing ->
