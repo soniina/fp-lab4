@@ -1,7 +1,7 @@
 module Logic where
 
+import Control.Applicative ((<|>))
 import Control.Monad.State
-import GHC.Base (neChar)
 import Types
 import Utils (shuffle)
 
@@ -14,25 +14,27 @@ getTopCard :: GameState -> Card
 getTopCard st = head (discardPile st)
 
 isValidMove :: Card -> Card -> Maybe Color -> Bool
-isValidMove played top activeColor =
+isValidMove played top currentActiveColor =
   case (played, top) of
     (Card _ Wild, _) -> True
     (Card _ WildDrawFour, _) -> True
-    (Card (Just playedColor) _, Card _ Wild) -> Just playedColor == activeColor
-    (Card (Just playedColor) _, Card _ WildDrawFour) -> Just playedColor == activeColor
+    (Card (Just playedColor) _, Card _ Wild) -> Just playedColor == currentActiveColor
+    (Card (Just playedColor) _, Card _ WildDrawFour) -> Just playedColor == currentActiveColor
     (Card (Just playedColor) playedValue, Card (Just topColor) topValue) -> playedColor == topColor || playedValue == topValue
     _ -> False
 
 updatePlayer :: Int -> (Player -> Player) -> Game ()
 updatePlayer pId f = modify $ \st ->
   let allPlayers = players st
-      (before, target : after) = splitAt pId allPlayers
-   in st {players = before ++ [f target] ++ after}
+      (before, rest) = splitAt pId allPlayers
+   in case rest of
+        (target : after) -> st {players = before ++ [f target] ++ after}
+        [] -> st
 
 playCard :: PlayerAction -> Game ()
 playCard action = case action of
   PlayCard cardId _ -> applyPlay cardId Nothing
-  PlayWildCard cardId color _ -> applyPlay cardId (Just color)
+  PlayWildCard cardId choosenColor _ -> applyPlay cardId (Just choosenColor)
   _ -> return ()
   where
     applyPlay cardId chosenColor = do
@@ -45,9 +47,7 @@ playCard action = case action of
       modify $ \s ->
         s
           { discardPile = card : discardPile s,
-            activeColor = case color card of
-              Just c -> Just c
-              Nothing -> chosenColor
+            activeColor = color card <|> chosenColor
           }
 
 removeAt :: Int -> [a] -> [a]
@@ -103,3 +103,19 @@ applySpecialCardEffect _ = do
     WildDrawFour ->
       modify $ \s -> s {pendingPenalty = pendingPenalty s + 4}
     _ -> return ()
+
+checkUno :: PlayerAction -> Game ()
+checkUno action = do
+  st <- get
+  let player = players st !! currentPlayerIndex st
+
+  let saidUno = case action of
+        PlayCard _ s -> s
+        PlayWildCard _ _ s -> s
+        _ -> True
+
+  when
+    (length (hand player) == 1 && not saidUno)
+    $ do
+      drawCard DrawCard
+      drawCard DrawCard

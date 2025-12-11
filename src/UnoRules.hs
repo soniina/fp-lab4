@@ -9,7 +9,7 @@ stackPenaltyMove =
   Transition
     { fromState = CheckPenalty,
       toState = ExecuteCard,
-      description = "Counter-Attack! Stack +2/+4",
+      description = "Stack Penalty (+2/+4)",
       condition = \st act ->
         case act of
           PlayCard cardId _ ->
@@ -44,7 +44,7 @@ noPenaltyMove =
   Transition
     { fromState = CheckPenalty,
       toState = WaitForInput,
-      description = "No penalty, play normal",
+      description = "Confirm No Penalty",
       condition = \st _ -> pendingPenalty st == 0,
       effect = \_ -> return ()
     }
@@ -54,7 +54,7 @@ validateMove =
   Transition
     { fromState = WaitForInput,
       toState = ExecuteCard,
-      description = "User plays a card",
+      description = "Play Valid Card",
       effect = playCard,
       condition = \st act ->
         case act of
@@ -70,7 +70,7 @@ drawMove =
   Transition
     { fromState = WaitForInput,
       toState = SwitchTurn,
-      description = "User draws a card",
+      description = "Draw Card",
       condition = \_ act -> act == DrawCard,
       effect = drawCard
     }
@@ -80,9 +80,39 @@ applyEffectMove =
   Transition
     { fromState = ExecuteCard,
       toState = ApplyEffect,
-      description = "Apply Card Effect",
+      description = "Apply Card Effects",
       condition = \_ _ -> True,
       effect = applySpecialCardEffect
+    }
+
+checkUnoMove :: Transition
+checkUnoMove =
+  Transition
+    { fromState = ApplyEffect,
+      toState = CheckUnoShout,
+      description = "Check UNO Shout",
+      condition = \_ _ -> True,
+      effect = checkUno
+    }
+
+victoryMove :: Transition
+victoryMove =
+  Transition
+    { fromState = CheckUnoShout,
+      toState = GameOver,
+      description = "Declare Victory",
+      condition = \st _ -> null (hand (players st !! currentPlayerIndex st)),
+      effect = \_ -> return ()
+    }
+
+noVictoryMove :: Transition
+noVictoryMove =
+  Transition
+    { fromState = CheckUnoShout,
+      toState = SwitchTurn,
+      description = "Proceed To Next Turn",
+      condition = \st _ -> not (null (hand (players st !! currentPlayerIndex st))),
+      effect = \_ -> return ()
     }
 
 switchTurnMove :: Transition
@@ -96,4 +126,15 @@ switchTurnMove =
     }
 
 unoMachine :: GameMachine
-unoMachine = [validateMove, drawMove]
+unoMachine =
+  [ stackPenaltyMove,
+    acceptPenaltyMove,
+    noPenaltyMove,
+    validateMove,
+    drawMove,
+    applyEffectMove,
+    checkUnoMove,
+    victoryMove,
+    noVictoryMove,
+    switchTurnMove
+  ]
