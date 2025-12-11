@@ -33,8 +33,8 @@ data GamePhase
   = CheckPenalty
   | WaitForInput
   | ExecuteCard
-  | ApplyEffect
   | CheckUnoShout
+  | ApplyEffect
   | CheckVictory
   | SwitchTurn
   | GameOver

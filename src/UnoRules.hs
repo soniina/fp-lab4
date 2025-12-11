@@ -75,20 +75,10 @@ drawMove =
       effect = drawCard
     }
 
-applyEffectMove :: Transition
-applyEffectMove =
-  Transition
-    { fromState = ExecuteCard,
-      toState = ApplyEffect,
-      description = "Apply Card Effects",
-      condition = \_ _ -> True,
-      effect = applySpecialCardEffect
-    }
-
 checkUnoMove :: Transition
 checkUnoMove =
   Transition
-    { fromState = ApplyEffect,
+    { fromState = ExecuteCard,
       toState = CheckUnoShout,
       description = "Check UNO Shout",
       condition = \_ _ -> True,
@@ -109,9 +99,19 @@ noVictoryMove :: Transition
 noVictoryMove =
   Transition
     { fromState = CheckUnoShout,
-      toState = SwitchTurn,
-      description = "Proceed To Next Turn",
+      toState = ApplyEffect,
+      description = "Apply Card Effects",
       condition = \st _ -> not (null (hand (players st !! currentPlayerIndex st))),
+      effect = applySpecialCardEffect
+    }
+
+effectsDoneMove :: Transition
+effectsDoneMove =
+  Transition
+    { fromState = ApplyEffect,
+      toState = SwitchTurn,
+      description = "Effects Applied",
+      condition = \_ _ -> True,
       effect = \_ -> return ()
     }
 
@@ -132,9 +132,9 @@ unoMachine =
     noPenaltyMove,
     validateMove,
     drawMove,
-    applyEffectMove,
     checkUnoMove,
     victoryMove,
     noVictoryMove,
+    effectsDoneMove,
     switchTurnMove
   ]
