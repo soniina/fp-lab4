@@ -1,0 +1,18 @@
+digraph UnoFSM {
+    rankdir=TB;
+    node [shape=Mrecord, style=filled, fillcolor="#DDA0DD"];
+    edge [fontsize=10, color="#333333"];
+
+    start [shape=circle, style=filled, fillcolor=black, label="", width=0.3];
+    start -> CheckPenalty;
+
+    CheckPenalty -> ExecuteCard [label="Stack Penalty (+2/+4)", ];
+    CheckPenalty -> SwitchTurn [label="Accept Penalty (Draw cards)", ];
+    CheckPenalty -> WaitForInput [label="Confirm No Penalty", ];
+    WaitForInput -> ExecuteCard [label="Play Card", ];
+    WaitForInput -> SwitchTurn [label="Draw Card", ];
+    ExecuteCard -> GameOver [label="Declare Victory", ];
+    ExecuteCard -> ApplyEffect [label="Apply Card Effects", ];
+    ApplyEffect -> SwitchTurn [label="Finalize Turn", ];
+    SwitchTurn -> CheckPenalty [label="Switch Active Player", ];
+}

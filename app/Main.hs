@@ -4,14 +4,15 @@ import Control.Applicative ((<|>))
 import Control.Monad.State
 import DSL
 import Data.Char (toLower)
+import DotGenerator
 import System.IO
 import System.Random (newStdGen)
 import Text.Read (readMaybe)
 import Types
 import UnoRules
-import Utils (shuffle)
+import Utils
 
-generateDeck :: [Card]
+generateDeck :: Deck
 generateDeck = concat [numberCards, actionCards, wildCards]
   where
     colors = [Red, Yellow, Green, Blue]
@@ -32,33 +33,66 @@ generateDeck = concat [numberCards, actionCards, wildCards]
       replicate 4 (Card Nothing Wild)
         ++ replicate 4 (Card Nothing WildDrawFour)
 
+askPlayerCount :: IO Int
+askPlayerCount = do
+  putStr "\nEnter number of players (2-10): "
+  hFlush stdout
+  line <- getLine
+  case readMaybe line of
+    Just n | n >= 2 && n <= 10 -> return n
+    _ -> do
+      putStrLn "Invalid number! Please enter a number between 2 and 10."
+      askPlayerCount
+
+askPlayerNames :: Int -> IO [String]
+askPlayerNames count = go 1
+  where
+    go i | i > count = return []
+    go i = do
+      putStr $ "Enter name for Player " ++ show i ++ ": "
+      hFlush stdout
+      pName <- getLine
+      if null pName
+        then do
+          putStrLn "Name cannot be empty!"
+          go i
+        else do
+          rest <- go (i + 1)
+          return (pName : rest)
+
+distributeCards :: [String] -> [Card] -> ([Player], [Card])
+distributeCards [] cards = ([], cards)
+distributeCards (pName : pNames) cards =
+  let (pHand, restDeck) = splitAt 7 cards
+      player = Player {name = pName, hand = pHand}
+      (otherPlayers, finalDeck) = distributeCards pNames restDeck
+   in (player : otherPlayers, finalDeck)
+
 setupGame :: IO GameState
 setupGame = do
-  gen <- newStdGen
+  putStrLn "=== WELCOME TO UNO ==="
 
+  count <- askPlayerCount
+  names <- askPlayerNames count
+
+  putStrLn "\nShuffling deck..."
+  gen <- newStdGen
   let (shuffledDeck, newGen) = shuffle generateDeck gen
 
-  let (hand1, rest1) = splitAt 7 shuffledDeck
-  let (hand2, rest2) = splitAt 7 rest1
+  let (playersList, deckRest) = distributeCards names shuffledDeck
 
-  let playersWithCards =
-        [ Player {name = "Player 1", hand = hand1},
-          Player {name = "Player 2", hand = hand2}
-        ]
-
-  let (topCard : deckRest) = rest2
+  let (topCard : finalDeck) = deckRest
 
   return $
     GameState
-      { players = playersWithCards,
-        deck = deckRest,
+      { players = playersList,
+        deck = finalDeck,
         discardPile = [topCard],
         activeColor = color topCard <|> Just Red,
         currentPlayerIndex = 0,
         direction = 1,
         currentPhase = CheckPenalty,
         pendingPenalty = 0,
-        gameLog = ["Game Started!"],
         rndGen = newGen
       }
 
@@ -127,8 +161,7 @@ runGame st = do
             _ -> False
 
       if isInteractive
-        then do
-          interactionLoop st
+        then interactionLoop st
         else do
           let result = step unoMachine st DrawCard
           case result of
@@ -180,7 +213,7 @@ interactionLoop st = do
     Right action -> do
       case step unoMachine st action of
         Left _ -> do
-          putStr "\n❌ MOVE REJECTED! "
+          putStr "\n MOVE REJECTED! "
 
           if pendingPenalty st > 0
             then putStrLn "You must play a matching +2/+4 card OR type 'draw'."
@@ -194,5 +227,9 @@ interactionLoop st = do
 
 main :: IO ()
 main = do
+  putStrLn "Generating 'uno.dot'..."
+  writeFile "uno.dot" (generateDot unoMachine)
+  putStrLn "Done!\n"
+
   st <- setupGame
   runGame st

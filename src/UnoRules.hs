@@ -1,4 +1,4 @@
-module UnoRules where
+module UnoRules (unoMachine) where
 
 import DSL
 import Logic
@@ -54,7 +54,7 @@ validateMove =
   Transition
     { fromState = WaitForInput,
       toState = ExecuteCard,
-      description = "Play Valid Card",
+      description = "Play Card",
       effect = playCard,
       condition = \st act ->
         case act of
@@ -75,20 +75,10 @@ drawMove =
       effect = drawCard
     }
 
-checkUnoMove :: Transition
-checkUnoMove =
-  Transition
-    { fromState = ExecuteCard,
-      toState = CheckUnoShout,
-      description = "Check UNO Shout",
-      condition = \_ _ -> True,
-      effect = checkUno
-    }
-
 victoryMove :: Transition
 victoryMove =
   Transition
-    { fromState = CheckUnoShout,
+    { fromState = ExecuteCard,
       toState = GameOver,
       description = "Declare Victory",
       condition = \st _ -> null (hand (players st !! currentPlayerIndex st)),
@@ -98,7 +88,7 @@ victoryMove =
 noVictoryMove :: Transition
 noVictoryMove =
   Transition
-    { fromState = CheckUnoShout,
+    { fromState = ExecuteCard,
       toState = ApplyEffect,
       description = "Apply Card Effects",
       condition = \st _ -> not (null (hand (players st !! currentPlayerIndex st))),
@@ -110,7 +100,7 @@ effectsDoneMove =
   Transition
     { fromState = ApplyEffect,
       toState = SwitchTurn,
-      description = "Effects Applied",
+      description = "Finalize Turn",
       condition = \_ _ -> True,
       effect = \_ -> return ()
     }
@@ -120,7 +110,7 @@ switchTurnMove =
   Transition
     { fromState = SwitchTurn,
       toState = CheckPenalty,
-      description = "Switch Player",
+      description = "Switch Active Player",
       condition = \_ _ -> True,
       effect = switchTurn
     }
@@ -132,7 +122,6 @@ unoMachine =
     noPenaltyMove,
     validateMove,
     drawMove,
-    checkUnoMove,
     victoryMove,
     noVictoryMove,
     effectsDoneMove,

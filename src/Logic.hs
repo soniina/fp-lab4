@@ -1,9 +1,12 @@
-module Logic where
+module Logic (getCardFromHand, getTopCard, isValidMove, playCard, drawCard, acceptPenalty, applySpecialCardEffect, switchTurn) where
 
 import Control.Applicative ((<|>))
 import Control.Monad.State
 import Types
 import Utils (shuffle)
+
+removeAt :: Int -> [a] -> [a]
+removeAt i xs = take i xs ++ drop (i + 1) xs
 
 getCardFromHand :: GameState -> Int -> Card
 getCardFromHand st index =
@@ -34,7 +37,7 @@ updatePlayer pId f = modify $ \st ->
 playCard :: PlayerAction -> Game ()
 playCard action = case action of
   PlayCard cardId _ -> applyPlay cardId Nothing
-  PlayWildCard cardId choosenColor _ -> applyPlay cardId (Just choosenColor)
+  PlayWildCard cardId chosenColor _ -> applyPlay cardId (Just chosenColor)
   _ -> return ()
   where
     applyPlay cardId chosenColor = do
@@ -49,9 +52,30 @@ playCard action = case action of
           { discardPile = card : discardPile s,
             activeColor = color card <|> chosenColor
           }
+      checkUno action
 
-removeAt :: Int -> [a] -> [a]
-removeAt i xs = take i xs ++ drop (i + 1) xs
+checkUno :: PlayerAction -> Game ()
+checkUno action = do
+  st <- get
+  let player = players st !! currentPlayerIndex st
+
+  let saidUno = case action of
+        PlayCard _ s -> s
+        PlayWildCard _ _ s -> s
+        _ -> True
+
+  when
+    (length (hand player) == 1 && not saidUno)
+    $ do
+      drawCard DrawCard
+      drawCard DrawCard
+
+acceptPenalty :: PlayerAction -> Game ()
+acceptPenalty _ = do
+  st <- get
+  let penalty = pendingPenalty st
+  replicateM_ penalty (drawCard DrawCard)
+  modify $ \s -> s {pendingPenalty = 0}
 
 drawCard :: PlayerAction -> Game ()
 drawCard _ = do
@@ -73,13 +97,6 @@ drawCard _ = do
     (top : rest) -> do
       updatePlayer (currentPlayerIndex st) (\p -> p {hand = top : hand p})
       modify $ \s -> s {deck = rest}
-
-acceptPenalty :: PlayerAction -> Game ()
-acceptPenalty _ = do
-  st <- get
-  let penalty = pendingPenalty st
-  replicateM_ penalty (drawCard DrawCard)
-  modify $ \s -> s {pendingPenalty = 0}
 
 switchTurn :: PlayerAction -> Game ()
 switchTurn _ = modify $ \st ->
@@ -103,19 +120,3 @@ applySpecialCardEffect _ = do
     WildDrawFour ->
       modify $ \s -> s {pendingPenalty = pendingPenalty s + 4}
     _ -> return ()
-
-checkUno :: PlayerAction -> Game ()
-checkUno action = do
-  st <- get
-  let player = players st !! currentPlayerIndex st
-
-  let saidUno = case action of
-        PlayCard _ s -> s
-        PlayWildCard _ _ s -> s
-        _ -> True
-
-  when
-    (length (hand player) == 1 && not saidUno)
-    $ do
-      drawCard DrawCard
-      drawCard DrawCard

@@ -1,4 +1,4 @@
-module Types where
+module Types (Color (..), Value (..), Card (..), Deck, Player (..), PlayerAction (..), GamePhase (..), GameState (..), Game) where
 
 import Control.Monad.State (State)
 import System.Random (StdGen)
@@ -33,7 +33,6 @@ data GamePhase
   = CheckPenalty
   | WaitForInput
   | ExecuteCard
-  | CheckUnoShout
   | ApplyEffect
   | CheckVictory
   | SwitchTurn
@@ -56,7 +55,6 @@ data GameState
     direction :: Int, -- 1 (по часовой) или -1 (против)
     currentPhase :: GamePhase,
     pendingPenalty :: Int,
-    gameLog :: [String],
     rndGen :: StdGen
   }
   deriving (Show)
