@@ -56,13 +56,7 @@ validateMove =
       toState = ExecuteCard,
       description = "Play Card",
       effect = playCard,
-      condition = \st act ->
-        case act of
-          PlayCard idx _ ->
-            isValidMove (getCardFromHand st idx) (getTopCard st) (activeColor st)
-          PlayWildCard idx _ _ ->
-            isValidMove (getCardFromHand st idx) (getTopCard st) (activeColor st)
-          _ -> False
+      condition = isValidMove
     }
 
 drawMove :: Transition

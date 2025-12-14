@@ -1,4 +1,4 @@
-module DSL where
+module DSL (Transition (..), GameMachine, step) where
 
 import Control.Monad.State (execState)
 import Data.List (find)

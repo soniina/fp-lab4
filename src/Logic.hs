@@ -16,14 +16,18 @@ getCardFromHand st index =
 getTopCard :: GameState -> Card
 getTopCard st = head (discardPile st)
 
-isValidMove :: Card -> Card -> Maybe Color -> Bool
-isValidMove played top currentActiveColor =
-  case (played, top) of
-    (Card _ Wild, _) -> True
-    (Card _ WildDrawFour, _) -> True
-    (Card (Just playedColor) _, Card _ Wild) -> Just playedColor == currentActiveColor
-    (Card (Just playedColor) _, Card _ WildDrawFour) -> Just playedColor == currentActiveColor
-    (Card (Just playedColor) playedValue, Card (Just topColor) topValue) -> playedColor == topColor || playedValue == topValue
+isValidMove :: GameState -> PlayerAction -> Bool
+isValidMove st action =
+  case action of
+    PlayCard cardId _ ->
+      let card = getCardFromHand st cardId
+          top = getTopCard st
+       in case (card, top) of
+            (Card (Just playedColor) _, Card _ Wild) -> Just playedColor == activeColor st
+            (Card (Just playedColor) _, Card _ WildDrawFour) -> Just playedColor == activeColor st
+            (Card (Just playedColor) playedValue, Card (Just topColor) topValue) -> playedColor == topColor || playedValue == topValue
+            _ -> False
+    PlayWildCard {} -> True
     _ -> False
 
 updatePlayer :: Int -> (Player -> Player) -> Game ()
