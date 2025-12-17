@@ -1,4 +1,4 @@
-module Main where
+module Main (main) where
 
 import Control.Applicative ((<|>))
 import Control.Monad.State
@@ -81,7 +81,9 @@ setupGame = do
 
   let (playersList, deckRest) = distributeCards names shuffledDeck
 
-  let (topCard : finalDeck) = deckRest
+  let (topCard, finalDeck) = case deckRest of
+        (c : cs) -> (c, cs)
+        [] -> error "❌ Critical Error: Deck is empty during setup!"
 
   return $
     GameState
@@ -185,7 +187,7 @@ interactionLoop st = do
     Nothing -> return ()
 
   putStrLn "\n--- YOUR HAND ---"
-  let cards = zip [0 ..] (hand currentPlayer)
+  let cards = zip ([0 ..] :: [Int]) (hand currentPlayer)
   mapM_ (\(i, c) -> putStrLn $ show i ++ ": " ++ showCard c) cards
 
   putStrLn "\n--- COMMANDS ---"
