@@ -55,8 +55,8 @@ validateMove =
     { fromState = WaitForInput,
       toState = ExecuteCard,
       description = "Play Card",
-      effect = playCard,
-      condition = isValidMove
+      condition = isValidMove,
+      effect = playCard
     }
 
 drawMove :: Transition

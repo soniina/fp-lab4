@@ -131,9 +131,9 @@ parseCommand input st =
                   Nothing -> Left "⚠️ You must specify a color for Wild cards! (e.g., 'play 0 red')"
                 WildDrawFour -> case chosenColor of
                   Just col -> Right $ PlayWildCard cardId col saidUno
-                  Nothing -> Left "⚠️ You must specify a color for Wild cards! (e.g., 'play 0 blue')"
+                  Nothing -> Left "⚠️ You must specify a color for Wild cards! (e.g., 'play 0 red')"
                 _ -> Right $ PlayCard cardId saidUno
-    _ -> Left "Unknown command format. Use 'play <id>' or 'draw'."
+    _ -> Left "❌ Unknown command format. Use 'play <id>' or 'draw'."
   where
     parseRest :: [String] -> (Maybe Color, Bool) -> (Maybe Color, Bool)
     parseRest [] acc = acc
@@ -167,8 +167,7 @@ runGame st = do
           case result of
             Right nextSt -> runGame nextSt
             Left err -> do
-              putStrLn $ "CRITICAL ERROR in Auto-Phase (" ++ show (currentPhase st) ++ "): " ++ err
-              interactionLoop st
+              putStrLn $ "❌ CRITICAL ERROR in Auto-Phase (" ++ show (currentPhase st) ++ "): " ++ err
 
 interactionLoop :: GameState -> IO ()
 interactionLoop st = do
@@ -213,13 +212,13 @@ interactionLoop st = do
     Right action -> do
       case step unoMachine st action of
         Left _ -> do
-          putStr "\n MOVE REJECTED! "
+          putStr "\n❌ MOVE REJECTED! "
 
           if pendingPenalty st > 0
             then putStrLn "You must play a matching +2/+4 card OR type 'draw'."
             else putStrLn "Card does not match color or value."
 
-          putStrLn "\nPress Enter to try again..."
+          putStrLn "Press Enter to try again..."
           _ <- getLine
           interactionLoop st
         Right nextSt -> do
