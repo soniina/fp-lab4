@@ -1,0 +1,53 @@
+name: Haskell Lab 4 CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 
+
+      - name: Setup Haskell (Stack + Tools)
+        uses: haskell-actions/setup@v2
+        with:
+          enable-stack: true
+          stack-version: 'latest'
+          stack-no-global: true 
+
+      - name: Cache stack and tools
+        uses: actions/cache@v4 
+        env:
+          cache-name: cache-stack
+        with:
+          path: |
+            ~/.stack
+            ~/.local/bin
+            .stack-work
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/stack.yaml.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: Install dependencies
+        run: |
+          stack setup
+          stack build --dependencies-only --test
+
+      - name: Install Tools
+        run: |
+          if ! command -v ormolu &> /dev/null; then stack install ormolu; fi
+          if ! command -v hlint &> /dev/null; then stack install hlint; fi
+
+      - name: Check formatting
+        run: stack exec ormolu -- --mode check $(find app src test -name "*.hs")
+
+      - name: Run HLint
+        run: stack exec hlint -- .
+
+      - name: Build
+        run: stack build --pedantic --test --no-run-tests
+
+      - name: Run tests
+        run: stack test
