@@ -45,8 +45,7 @@ data PlayerAction
   | DrawCard
   deriving (Show, Eq)
 
-data GameState
-  = GameState
+data GameState = GameState
   { players :: [Player],
     deck :: Deck,
     discardPile :: [Card],
