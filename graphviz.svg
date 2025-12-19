@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="414pt" height="444pt" viewBox="0.00 0.00 414.00 444.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 439.6)">
+<title>UnoFSM</title>
+<!-- start -->
+<g id="node1" class="node">
+<title>start</title>
+<ellipse fill="black" stroke="white" cx="160" cy="-424.8" rx="10.8" ry="10.8"/>
+</g>
+<!-- CheckPenalty -->
+<g id="node2" class="node">
+<title>CheckPenalty</title>
+<path fill="#4b0082" stroke="white" d="M125.12,-340.5C125.12,-340.5 194.88,-340.5 194.88,-340.5 200.88,-340.5 206.88,-346.5 206.88,-352.5 206.88,-352.5 206.88,-364.5 206.88,-364.5 206.88,-370.5 200.88,-376.5 194.88,-376.5 194.88,-376.5 125.12,-376.5 125.12,-376.5 119.12,-376.5 113.12,-370.5 113.12,-364.5 113.12,-364.5 113.12,-352.5 113.12,-352.5 113.12,-346.5 119.12,-340.5 125.12,-340.5"/>
+<text xml:space="preserve" text-anchor="middle" x="160" y="-354.3" font-family="Times,serif" font-size="14.00" fill="white">CheckPenalty</text>
+</g>
+<!-- start&#45;&gt;CheckPenalty -->
+<g id="edge1" class="edge">
+<title>start-&gt;CheckPenalty</title>
+<path fill="none" stroke="white" d="M160,-413.75C160,-406.93 160,-397.52 160,-388.46"/>
+<polygon fill="white" stroke="white" points="163.5,-388.5 160,-378.5 156.5,-388.5 163.5,-388.5"/>
+</g>
+<!-- ExecuteCard -->
+<g id="node3" class="node">
+<title>ExecuteCard</title>
+<path fill="#4b0082" stroke="white" d="M145.85,-170.5C145.85,-170.5 210.15,-170.5 210.15,-170.5 216.15,-170.5 222.15,-176.5 222.15,-182.5 222.15,-182.5 222.15,-194.5 222.15,-194.5 222.15,-200.5 216.15,-206.5 210.15,-206.5 210.15,-206.5 145.85,-206.5 145.85,-206.5 139.85,-206.5 133.85,-200.5 133.85,-194.5 133.85,-194.5 133.85,-182.5 133.85,-182.5 133.85,-176.5 139.85,-170.5 145.85,-170.5"/>
+<text xml:space="preserve" text-anchor="middle" x="178" y="-184.3" font-family="Times,serif" font-size="14.00" fill="white">ExecuteCard</text>
+</g>
+<!-- CheckPenalty&#45;&gt;ExecuteCard -->
+<g id="edge2" class="edge">
+<title>CheckPenalty-&gt;ExecuteCard</title>
+<path fill="none" stroke="white" d="M139.01,-340.13C126.23,-328.12 111.06,-310.94 104.07,-292 98.38,-276.57 97.32,-270 104.07,-255 111.52,-238.45 125.44,-224.39 139.21,-213.59"/>
+<polygon fill="white" stroke="white" points="140.99,-216.63 146.95,-207.87 136.83,-211 140.99,-216.63"/>
+<text xml:space="preserve" text-anchor="middle" x="148.04" y="-270.5" font-family="Times,serif" font-size="10.00" fill="white">Stack Penalty (+2/+4)</text>
+</g>
+<!-- SwitchTurn -->
+<g id="node4" class="node">
+<title>SwitchTurn</title>
+<path fill="#4b0082" stroke="white" d="M185.95,-0.5C185.95,-0.5 244.05,-0.5 244.05,-0.5 250.05,-0.5 256.05,-6.5 256.05,-12.5 256.05,-12.5 256.05,-24.5 256.05,-24.5 256.05,-30.5 250.05,-36.5 244.05,-36.5 244.05,-36.5 185.95,-36.5 185.95,-36.5 179.95,-36.5 173.95,-30.5 173.95,-24.5 173.95,-24.5 173.95,-12.5 173.95,-12.5 173.95,-6.5 179.95,-0.5 185.95,-0.5"/>
+<text xml:space="preserve" text-anchor="middle" x="215" y="-14.3" font-family="Times,serif" font-size="14.00" fill="white">SwitchTurn</text>
+</g>
+<!-- CheckPenalty&#45;&gt;SwitchTurn -->
+<g id="edge3" class="edge">
+<title>CheckPenalty-&gt;SwitchTurn</title>
+<path fill="none" stroke="white" d="M112.86,-352.93C65.66,-345.45 0,-325.82 0,-274.5 0,-274.5 0,-274.5 0,-102.5 0,-67.77 98.84,-41.98 162.49,-28.97"/>
+<polygon fill="white" stroke="white" points="162.94,-32.45 172.06,-27.06 161.57,-25.59 162.94,-32.45"/>
+<text xml:space="preserve" text-anchor="middle" x="57.89" y="-185.5" font-family="Times,serif" font-size="10.00" fill="white">Accept Penalty (Draw cards)</text>
+</g>
+<!-- WaitForInput -->
+<g id="node5" class="node">
+<title>WaitForInput</title>
+<path fill="#4b0082" stroke="white" d="M212.9,-255.5C212.9,-255.5 281.1,-255.5 281.1,-255.5 287.1,-255.5 293.1,-261.5 293.1,-267.5 293.1,-267.5 293.1,-279.5 293.1,-279.5 293.1,-285.5 287.1,-291.5 281.1,-291.5 281.1,-291.5 212.9,-291.5 212.9,-291.5 206.9,-291.5 200.9,-285.5 200.9,-279.5 200.9,-279.5 200.9,-267.5 200.9,-267.5 200.9,-261.5 206.9,-255.5 212.9,-255.5"/>
+<text xml:space="preserve" text-anchor="middle" x="247" y="-269.3" font-family="Times,serif" font-size="14.00" fill="white">WaitForInput</text>
+</g>
+<!-- CheckPenalty&#45;&gt;WaitForInput -->
+<g id="edge4" class="edge">
+<title>CheckPenalty-&gt;WaitForInput</title>
+<path fill="none" stroke="white" d="M178.03,-340.3C190.31,-328.58 206.78,-312.88 220.54,-299.74"/>
+<polygon fill="white" stroke="white" points="222.78,-302.44 227.6,-293.01 217.95,-297.38 222.78,-302.44"/>
+<text xml:space="preserve" text-anchor="middle" x="249.26" y="-313" font-family="Times,serif" font-size="10.00" fill="white">Confirm No Penalty</text>
+</g>
+<!-- GameOver -->
+<g id="node6" class="node">
+<title>GameOver</title>
+<path fill="#4b0082" stroke="white" d="M148.29,-85.5C148.29,-85.5 201.71,-85.5 201.71,-85.5 207.71,-85.5 213.71,-91.5 213.71,-97.5 213.71,-97.5 213.71,-109.5 213.71,-109.5 213.71,-115.5 207.71,-121.5 201.71,-121.5 201.71,-121.5 148.29,-121.5 148.29,-121.5 142.29,-121.5 136.29,-115.5 136.29,-109.5 136.29,-109.5 136.29,-97.5 136.29,-97.5 136.29,-91.5 142.29,-85.5 148.29,-85.5"/>
+<text xml:space="preserve" text-anchor="middle" x="175" y="-99.3" font-family="Times,serif" font-size="14.00" fill="white">GameOver</text>
+</g>
+<!-- ExecuteCard&#45;&gt;GameOver -->
+<g id="edge7" class="edge">
+<title>ExecuteCard-&gt;GameOver</title>
+<path fill="none" stroke="white" d="M176.82,-170.17C176.46,-164.4 176.1,-157.92 175.87,-152 175.63,-145.87 175.46,-139.3 175.33,-133.05"/>
+<polygon fill="white" stroke="white" points="178.83,-133.11 175.17,-123.17 171.83,-133.22 178.83,-133.11"/>
+<text xml:space="preserve" text-anchor="middle" x="207.93" y="-143" font-family="Times,serif" font-size="10.00" fill="white">Declare Victory</text>
+</g>
+<!-- ApplyEffect -->
+<g id="node7" class="node">
+<title>ApplyEffect</title>
+<path fill="#4b0082" stroke="white" d="M44.4,-85.5C44.4,-85.5 105.6,-85.5 105.6,-85.5 111.6,-85.5 117.6,-91.5 117.6,-97.5 117.6,-97.5 117.6,-109.5 117.6,-109.5 117.6,-115.5 111.6,-121.5 105.6,-121.5 105.6,-121.5 44.4,-121.5 44.4,-121.5 38.4,-121.5 32.4,-115.5 32.4,-109.5 32.4,-109.5 32.4,-97.5 32.4,-97.5 32.4,-91.5 38.4,-85.5 44.4,-85.5"/>
+<text xml:space="preserve" text-anchor="middle" x="75" y="-99.3" font-family="Times,serif" font-size="14.00" fill="white">ApplyEffect</text>
+</g>
+<!-- ExecuteCard&#45;&gt;ApplyEffect -->
+<g id="edge8" class="edge">
+<title>ExecuteCard-&gt;ApplyEffect</title>
+<path fill="none" stroke="white" d="M133.62,-172.52C116.47,-166.01 99.47,-158.41 93.25,-152 88,-146.59 84.22,-139.51 81.52,-132.48"/>
+<polygon fill="white" stroke="white" points="84.92,-131.62 78.55,-123.15 78.25,-133.74 84.92,-131.62"/>
+<text xml:space="preserve" text-anchor="middle" x="132.12" y="-143" font-family="Times,serif" font-size="10.00" fill="white">Apply Card Effects</text>
+</g>
+<!-- SwitchTurn&#45;&gt;CheckPenalty -->
+<g id="edge10" class="edge">
+<title>SwitchTurn-&gt;CheckPenalty</title>
+<path fill="none" stroke="white" d="M256.29,-33.14C286.05,-45.87 321,-68.14 321,-102.5 321,-274.5 321,-274.5 321,-274.5 321,-322.29 264.26,-342.59 218.15,-351.2"/>
+<polygon fill="white" stroke="white" points="217.76,-347.71 208.49,-352.84 218.94,-354.61 217.76,-347.71"/>
+<text xml:space="preserve" text-anchor="middle" x="363.49" y="-185.5" font-family="Times,serif" font-size="10.00" fill="white">Switch Active Player</text>
+</g>
+<!-- WaitForInput&#45;&gt;ExecuteCard -->
+<g id="edge5" class="edge">
+<title>WaitForInput-&gt;ExecuteCard</title>
+<path fill="none" stroke="white" d="M225.93,-255.01C219.91,-249.54 213.56,-243.29 208.28,-237 203.05,-230.76 198.01,-223.55 193.6,-216.66"/>
+<polygon fill="white" stroke="white" points="196.64,-214.93 188.43,-208.24 190.68,-218.6 196.64,-214.93"/>
+<text xml:space="preserve" text-anchor="middle" x="228.14" y="-228" font-family="Times,serif" font-size="10.00" fill="white">Play Card</text>
+</g>
+<!-- WaitForInput&#45;&gt;SwitchTurn -->
+<g id="edge6" class="edge">
+<title>WaitForInput-&gt;SwitchTurn</title>
+<path fill="none" stroke="white" d="M247.92,-255.34C248.27,-246.31 248.47,-235.05 248,-225 246.22,-187.1 245.64,-177.52 240,-140 235.22,-108.23 227.43,-72.2 221.81,-47.88"/>
+<polygon fill="white" stroke="white" points="225.29,-47.36 219.6,-38.43 218.47,-48.96 225.29,-47.36"/>
+<text xml:space="preserve" text-anchor="middle" x="263.84" y="-143" font-family="Times,serif" font-size="10.00" fill="white">Draw Card</text>
+</g>
+<!-- ApplyEffect&#45;&gt;SwitchTurn -->
+<g id="edge9" class="edge">
+<title>ApplyEffect-&gt;SwitchTurn</title>
+<path fill="none" stroke="white" d="M104.35,-85.1C125.16,-72.76 153.31,-56.07 176.01,-42.61"/>
+<polygon fill="white" stroke="white" points="177.57,-45.76 184.39,-37.65 174,-39.74 177.57,-45.76"/>
+<text xml:space="preserve" text-anchor="middle" x="180.46" y="-58" font-family="Times,serif" font-size="10.00" fill="white">Finalize Turn</text>
+</g>
+</g>
+</svg>

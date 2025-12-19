@@ -6,6 +6,7 @@ generateDot :: GameMachine -> String
 generateDot machine =
   unlines $
     [ "digraph UnoFSM {",
+      "    bgcolor=\"transparent\";",
       "    rankdir=TB;",
       "    node [shape=Mrecord, style=filled, fillcolor=\"#DDA0DD\"];",
       "    edge [fontsize=10, color=\"#333333\"];",
